@@ -1,25 +1,265 @@
-/* a minimalist set of CSS resets */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;600&display=swap');
 
-/* default to border-box */
-html {
-  box-sizing: border-box;
-  font-size: 16px;
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+   background-color: #054153;
+  }
+
+
+
+.card-wrapper {
+    height: 100%;
+    background-color: #054153;
+    background-image: url("https://assets.codepen.io/513985/winter.jpg");
+    background-size: cover;
+  }
+  
+
+  .cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+      transform: perspective(800px);
+  transform-style: preserve-3d;
+ 
+  }
+
+  .card {
+     --card-ratio: 0.667;
+    --card-size: 700px;
+    --card-border-color: #d1c2b5;
+    --card-padding: 30px;
+    --card-background-color: #f3e3d2;
+    --card-bg-blurfactor: 2px;
+    --card-width: calc( var(--card-size) * var(--card-ratio));
+    height: var(--card-size);
+    width: var(--card-width);
+    border: 1px solid var(--card-border-color);
+    border-radius: var(--card-padding);
+    box-shadow: 0px 50px 60px -12px rgba(0,0,0,0.78);
+    position: relative;
+    background: #fff;
+    font-family: 'Oswald', sans-serif;
+    transition: transform .2s;
+  }
+
+
+.card .reflex {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  z-index:2;
+  border-radius: var(--card-padding) var(--card-padding) 0 0;
+  left: 0;
+  top: 0;
+  background: linear-gradient(135deg, rgba(255,255, 255, .6) 0%, rgba(255, 255, 255, 0) 60%);
 }
 
-*, *:before, *:after {
-  box-sizing: inherit;
+
+  .card * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  
+
+  .card .header {
+    height: 38.2%;
+    transform-style: preserve-3d;
+    position: relative;
+  }
+  
+
+  .card .header:before,
+  .card .header:after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    border-radius: var(--card-padding) var(--card-padding) 0 0;
+  }
+  
+
+  .card .background {
+    display: block;
+    color: #fff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+     border-radius: var(--card-padding) var(--card-padding) 0 0;
+    background-position: 50% 50%;
+    background-size: 900px 473px;
+    background-color: #054153;
+    background-image: url("https://assets.codepen.io/513985/winter.jpg");
+    filter: blur(var(--card-bg-blurfactor));
+  }
+  //
+
+  .card .header:after {
+     background: radial-gradient(
+          circle,
+          transparent 1px,
+          rgba(0, 0, 0, 0.35) 200px
+      );
+      border-bottom: calc(var(--card-bg-blurfactor) * 1.5) solid var(--card-background-color);
+  }
+
+.card .image-container:after {
+  content: '';
+  position: absolute;
+  background-image: url("https://assets.codepen.io/513985/snow.png");
+  width: 100%;
+  height: 100%;
+  background-size: 600px 800px;
+  background-position: -50px 100%; 
+  border-radius: var(--card-padding) var(--card-padding) 0 0;
+  background-repeat: repeat-y;
+  animation: animatedBackground 20s linear infinite;
+  animation-play-state: paused;
+ 
 }
 
-/* adjust typography defaults */
-body {
-  margin: 1rem;
-  font-family: sans-serif;
-  line-height: 1.5;
+.card.focus .image-container:after {
+    animation-play-state: running;
+}
+ 
+  .card img {
+    display: block;
+    left: 50%;
+    transform: perspective(1600px) rotateY(30deg) scale(1.3) translateX(-40%);
+    filter: drop-shadow(5px 5px 5px rgba(0,0,0,.5));
+    position: absolute;
+    max-height: 100%;
+    z-index: 3;
+  }
+  
+  .card .main {
+    height: 61.8%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background-color: var(--card-background-color);
+    border-radius: 0 0 var(--card-padding) var(--card-padding);
+  }  
+  
+  .card .content {
+    padding: var(--card-padding);
+    flex-grow: 1;
+    
+  }
+  
+ 
+  .card h1 {
+    font-size: 2.3rem;
+    line-height: 1;
+  }
+  .card h2 {
+    margin-bottom: calc(var(--card-padding) * 0.4);
+    color: #751B14;
+  }
+  
+  .card p {
+    line-height: 1.6;
+    font-size: 1.6rem;
+    hyphens: auto;
+  }
+  
+  .card ul {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    background: #d1c2b5;
+    border-radius: 0 0 var(--card-padding) var(--card-padding);
+  }
+  
+.card li h3 {
+  font-weight: normal;
+  margin-bottom: 5px;
+  display: flex;
+  text-transform: uppercase;
+  align-items: center;
+  justify-content: center;
 }
 
-/* images and videos max out at full width */
-img,
-video {
-  height: auto;
-  max-width: 100%;
+.card li h3 svg {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+}
+
+  .card li {
+    flex-grow: 1;
+    padding: calc( var(--card-padding) - 5px ) 0;
+    text-align: center;
+    border: 1px solid #f3e3d2;
+    border-bottom: 0;
+    position: relative;
+  }
+
+  .card .rating svg {
+    width: 16px;
+    height: 16px;
+    stroke: #000;
+    fill: transparent;
+  }
+
+
+ .card .rating svg.filled {
+    fill: #000;
+  }
+
+
+  .card li:hover {
+    background: #751B14;
+    color: #f3e3d2; 
+  }
+
+
+  .card li:hover svg {
+     stroke: #f3e3d2;
+  }
+
+
+  .card  li:hover h3 svg, 
+  .card  li:hover svg.filled {
+    fill: #f3e3d2;
+  }
+ 
+
+.card li:first-child {
+  border-radius: 0 0 0 var(--card-padding); 
+}
+
+
+.card li:last-child {
+  border-radius: 0 0 var(--card-padding) 0; 
+}
+
+
+  .card li:first-child,
+  .card li:last-child {
+   border-left: 0;
+   border-right: 0;
+  }
+
+
+@keyframes animatedBackground {
+	from { background-position: -50px 100%; }
+	to { background-position: -50px 0; }
+}
+
+
+#map {
+  display: none;
 }
