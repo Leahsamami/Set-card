@@ -1,0 +1,484 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:meta";
+
+@function map-deep-get($map, $keys...) {
+   $scope: $map;
+   $i: 1;
+   @while (meta.type-of($scope) == map) and ($i <= list.length($keys)) {
+      $scope: map.get($scope, list.nth($keys, $i));
+      $i: $i + 1;
+   }
+   @return $scope;
+}
+
+$ratingColor: #fff;
+$ratingBackground: #044e10;
+$ratingSize: 16px;
+$cardRatio: 0.667;
+$cardSize: 700px;
+$cardPadding: 20px;
+$cardBorderColor: #000;
+$cardBackground: #fff;
+$cardSpace: 100px;
+$cardWidth: $cardSize * $cardRatio;
+$boxWidth: $cardWidth + ($cardSpace * 2);
+
+$setCards: (
+  "v": (
+      "ratingBackground": #044e10,
+      "hover": #75d578,
+      "headerImage": "https://assets.codepen.io/513985/bg-v.png",
+      "initials": "https://assets.codepen.io/513985/V.png",
+      "infoPos":  35% center
+     
+  ),
+  "jk": (
+      "ratingBackground": #423876,
+      "hover": #e782e9,
+      "headerImage": "https://assets.codepen.io/513985/bg-jk.png",
+      "initials": "https://assets.codepen.io/513985/JK.png",
+      "infoPos":  50% center
+  
+  ),
+  "jm": (
+      "ratingBackground": #8b5a08,
+      "hover": #f5d30d,
+      "headerImage": "https://assets.codepen.io/513985/bg-jm.png",
+      "initials": "https://assets.codepen.io/513985/JM.png",
+      "infoPos":  16% center
+  ),
+  "my": (
+      "ratingBackground": #141517,
+      "hover": #afb7bb,
+      "headerImage": "https://assets.codepen.io/513985/bg-my.png",
+      "initials": "https://assets.codepen.io/513985/MY.png",
+      "infoPos":  87% center
+  ),
+   "jh": (
+      "ratingBackground": #8f1414,
+      "hover": #f1b1b5,
+      "headerImage": "https://assets.codepen.io/513985/bg-jh.png",
+      "initials": "https://assets.codepen.io/513985/JH.png",
+      "infoPos":  65% center
+  ),
+   "ks": (
+      "ratingBackground": #f326e8,
+       "hover": #eabce8,
+      "headerImage": "https://assets.codepen.io/513985/bg-ks.png",
+      "initials": "https://assets.codepen.io/513985/KS.png",
+      "infoPos":  22% center
+  ),
+    "rm": (
+      "ratingBackground": #4fa59a,
+      "hover": #bbe0db,
+      "headerImage": "https://assets.codepen.io/513985/bg-rm.png",
+      "initials": "https://assets.codepen.io/513985/RM.png",
+      "infoPos": 29% center
+  )
+);
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;600&display=swap');
+
+%ulreset {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Oswald', sans-serif;
+  overflow: hidden;
+}
+
+h2, h3 {
+  font-weight: normal;
+}
+
+*, *:before, *:after {
+ box-sizing: border-box;  
+}
+
+
+.bgContainer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  transition: opacity .5s ease-in-out .1s;  
+  background-color: rgba(0,0,0,.1);
+  background-blend-mode: darken;
+  
+  &:after {
+    content: '';
+    width:100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+   background-image: linear-gradient(90deg,#000,transparent 25%, transparent 75%, #000), linear-gradient(0deg,#000,transparent 25%, transparent 75%, #000);
+  }
+  
+}
+
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $boxWidth;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+  
+  > .container {
+    width: $boxWidth;
+    flex: 1;
+    padding: 100px 0;
+    margin-left: 0;
+    margin-right: 0;
+    overflow-x: hidden;
+  }
+  
+  .btn {
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    line-height: 40px;
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    
+    svg {
+      width: 40px;
+      height: 40px;
+      fill: #fff;
+    }
+    
+    &.forward {
+      right: 0px;
+      
+      
+    }
+    
+    &.backward {
+      left: 0px;
+      transform: rotate(-180deg);
+    }
+    
+  }
+  
+  
+}
+
+.cards {
+  @extend %ulreset;
+  user-select: none;
+  position: relative;
+  display: flex;
+  height: $cardSize;
+  width: $boxWidth * 7;
+ 
+  
+  
+  .header {
+    height: 38.2%;
+    overflow: hidden;
+    border-radius: $cardPadding $cardPadding 0 0;
+    border-bottom: 1px solid $cardBackground;
+    .image-container {
+      height: 100%;
+      background-position: 50% 50%;
+      background-size: 593px 347px;
+    }
+  }
+  
+  .character {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    
+    img {
+      position: absolute;
+      bottom: 0;
+      float: left;
+      width: 100%;
+    }
+  }
+  
+  .card {
+    height: $cardSize;
+    width: $boxWidth;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX($boxWidth * -1);
+    transition: transform .5s ease-in-out .1s;  
+    
+    
+    h3 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      svg {
+        width: 20px;
+        height: 20px;
+        fill: #fff;
+        
+      }
+    }
+    
+    .bts {
+      position: absolute;
+      z-index: 10;
+      bottom: 10px;
+      width: 50px;
+      height: 50px;
+    }
+   
+    > .container {
+       width: $cardWidth;
+       position: relative;
+       transform: perspective(800px);
+       transform-style: preserve-3d;
+    }
+    
+    .flip-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+      &.rotated {
+         transform: rotateY(180deg);
+        
+        .card-front {
+          z-index: -1 !important;
+        }
+      }
+    }
+    
+    .card-front, .card-back {
+      backface-visibility: hidden;
+      position: absolute;
+      background-color: $cardBackground;
+      border-radius: $cardPadding;
+      box-shadow: 0px 50px 60px -12px #000;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .card-back {
+      transform: rotateY(180deg);
+      padding: $cardPadding;
+      
+      .cb-inner {
+        border-radius: $cardPadding;
+        border: 1px solid #fff;
+        padding: $cardPadding;
+        height: 100%;
+      }
+    }
+    
+    .light-effect {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      z-index:12;
+      border-radius: $cardPadding $cardPadding 0;
+      left: 0;
+      top: 0;
+      background: linear-gradient(135deg, rgba(255,255, 255, .6) 0%, rgba(255, 255, 255, 0) 60%);
+}
+   
+    .main {
+      padding: 15% $cardPadding $cardPadding $cardPadding;
+    }
+    
+    .info {
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 60%;
+      min-height: 100px;
+    }
+    
+    > .container, .card-front, .card-back, .wrap {
+      height: 100%;
+    }
+    
+     &.pos-right {
+       .nav {
+         display: none;
+       }
+       .character {
+          right: 0;
+          border-radius: 0 0 $cardPadding 0;
+         
+           img {
+            filter: drop-shadow(-10px -10px 10px rgba(0,0,0,.7));
+          }
+       }
+    }
+    
+    &.pos-left {
+      .bts {
+        fill: #fff;
+      }
+      .character {
+       left: 0;
+       border-radius: 0 0 0 $cardPadding;   
+        img {
+           filter: drop-shadow(10px 10px 10px rgba(0,0,0,.7));
+        }
+      }
+      .main {
+        text-align: right;
+        display: flex;
+        justify-content: flex-end;
+      }
+      
+      .properties ul, ul.nav {
+         justify-content: flex-end;
+        li {
+          border-left: 1px solid $cardBackground;
+          border-right: 0; 
+        }
+      }
+    }
+   
+    @each $member, $settings in $setCards {
+       &.#{$member} {
+         .card-back {
+           background:  linear-gradient(0deg,map-deep-get($setCards, $member, "ratingBackground") 0%, map-deep-get($setCards, $member, "hover") 100%);
+         }
+         .nav li {
+           opacitiy: 1;
+           cursor: pointer;
+           &:hover {
+              background: map-deep-get($setCards, $member, "hover");
+              opacity: 1;
+              color: #000;
+              h3 svg {
+               fill: #000;
+             } 
+             .rating svg {
+                stroke: #000;
+                &.filled {
+                  fill: #000;
+                }
+              }
+           }
+         } 
+        .properties {
+          ul {
+             background: map-deep-get($setCards, $member, "ratingBackground");
+            
+            li:hover {
+              background: map-deep-get($setCards, $member, "hover");
+              
+            }
+          }
+        }
+         .header {
+           .image-container {
+             background-image: url(map-deep-get($setCards, $member, "headerImage"));
+           }
+         }
+         
+         .info {
+            background-image: url(map-deep-get($setCards, $member, "initials"));
+            background-position: map-deep-get($setCards, $member, "infoPos");
+         }
+      }
+    }
+  }
+  
+  ul.nav {
+    @extend %ulreset;
+    display: flex;
+    color: $ratingColor;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 15;
+    li {
+      border-right: 1px solid #fff;
+      padding: $cardPadding / 2 8px;
+      text-align: center;
+    }
+  }
+  
+  .properties {
+    ul {
+       @extend %ulreset;
+       display: flex;
+       color: $ratingColor;
+    }
+    
+    li {
+      border-right: 1px solid $cardBackground;
+      padding: $cardPadding / 2 8px;
+      text-align: center;
+      cursor: pointer;
+       &:hover {
+         opacity: 1;
+         color: #000 !important;
+         h3 svg {
+           fill: #000 !important;
+         } 
+         .rating svg {
+           stroke: #000 !important;
+           &.filled {
+             fill: #000 !important;
+           }
+         }
+       }
+    }
+  }
+  
+  h1, h2, h3, p {
+    margin: 0;
+    line-height: 1;
+  }
+  
+  h1 {
+    font-size: 35px;
+    padding-top: 15px;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px #fff;
+  }
+  
+  h2 {
+    font-size: 19px;
+    text-shadow: 1px 1px rgba(255,255,255,.5);
+    
+  }
+   
+  .rating {
+     svg {
+      width: $ratingSize;
+      height: $ratingSize;
+      stroke: $ratingColor;
+      fill: transparent;
+       
+       &.filled {
+          fill: $ratingColor;
+       }
+    }
+  }
+}
